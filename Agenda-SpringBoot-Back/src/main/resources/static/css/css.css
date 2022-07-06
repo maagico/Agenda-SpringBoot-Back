@@ -1,0 +1,19 @@
+.color-verde{
+	color: green;
+}
+
+.color-rojo{
+	color:red;
+}
+
+.invisible{
+	display: none;
+}
+
+.visible{
+	visibility: visible;
+}
+.busqueda-web{
+	color:green; 
+	margin-right:15px;
+}
