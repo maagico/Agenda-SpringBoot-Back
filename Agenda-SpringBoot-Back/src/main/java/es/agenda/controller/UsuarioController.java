@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.agenda.json.MensajeJSON;
 import es.agenda.json.UsuarioJSON;
 import es.agenda.service.RolServiceI;
 import es.agenda.service.UsuarioServiceI;
@@ -22,10 +23,14 @@ public class UsuarioController {
 	
 	
 	@PostMapping(value = "usuarios")
-	public UsuarioJSON crearUsuarios(@RequestBody UsuarioJSON usuarioJSON) {
+	public MensajeJSON crearUsuarios(@RequestBody UsuarioJSON usuarioJSON) {
 	
-		System.out.println(usuarioJSON);
-		return usuarioJSON;
+		MensajeJSON mensajeJSON = new MensajeJSON();
+		
+		mensajeJSON.setOk(true);
+		mensajeJSON.setTexto("Usuario creado correctamente");
+		
+		return mensajeJSON;
 		
 	}
 //			Usuario usuario = new Usuario();
