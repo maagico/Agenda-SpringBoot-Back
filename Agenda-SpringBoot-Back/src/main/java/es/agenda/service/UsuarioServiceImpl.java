@@ -3,6 +3,7 @@ package es.agenda.service;
 import java.util.List;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import es.agenda.dao.UsuarioDaoI;
@@ -11,6 +12,7 @@ import es.agenda.model.Usuario;
 
 @Service("usuarioService")
 public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI> implements UsuarioServiceI{
+	
 	
 	public UsuarioServiceImpl(UsuarioDaoI dao) {
 		super(dao);
@@ -21,7 +23,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 		String nombreUsuario = usuario.getUsuario();
 		String password = usuario.getPassword();
 		
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		password = encoder.encode(password);
 		
 		usuario.setPassword(password);
@@ -50,6 +52,18 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 		return dao.findAllUsuariosOrderByNombre();
 	}
 
+	@Override
+	public Usuario findUsuarioByUsuarioYPassword(String usuario, String password) {
+		
+		return dao.findUsuarioByUsuarioYPassword(usuario, password);
+	}
+	
+	@Override
+	public String findRolesByUsuario(String usuario) {
+		
+		return dao.findRolesByUsuario(usuario);
+	}
+	
 	@Override
 	public List<Usuario> buscarUsuarios(String textoABuscar) {
 		

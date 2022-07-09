@@ -13,4 +13,8 @@ public interface UsuarioDaoI extends GenericDaoI<Usuario>{
 	List<Usuario> findAllUsuariosOrderByNombre();
 
 	List<Usuario> buscarUsuarios(String textoABuscar);
+
+	Usuario findUsuarioByUsuarioYPassword(String usuario, String password);
+
+	String findRolesByUsuario(String usuario);
 }

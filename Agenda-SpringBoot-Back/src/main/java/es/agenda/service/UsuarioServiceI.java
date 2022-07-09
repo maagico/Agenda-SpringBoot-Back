@@ -14,4 +14,8 @@ public interface UsuarioServiceI extends GenericServiceI<Usuario>{
 	List<Usuario> findAllUsuariosOrderByNombre();
 
 	List<Usuario> buscarUsuarios(String textoABuscar);
+
+	Usuario findUsuarioByUsuarioYPassword(String usuario, String password);
+
+	String findRolesByUsuario(String usuario);
 }
