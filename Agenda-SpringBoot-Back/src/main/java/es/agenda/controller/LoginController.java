@@ -1,35 +1,32 @@
 package es.agenda.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import es.agenda.json.TokenJSON;
 import es.agenda.model.Usuario;
 import es.agenda.service.UsuarioServiceI;
 import es.agenda.util.JWTUtils;
 
 @Controller
+@RequestMapping("/api")
 public class LoginController {
 	
 	@Autowired
 	private UsuarioServiceI usuarioService;	
 
-	@PostMapping("/api/login")
-	public ResponseEntity<String> login(HttpServletRequest request, 
-										String username, 
-										String password)
-										throws Exception {
+	@PostMapping("/login")
+	public ResponseEntity<TokenJSON> login(String username, 
+										   String password)
+										   throws Exception {
 		
 		Usuario usuario = usuarioService.findUsuarioByUsuarioYPassword(username, password);
+		
+		TokenJSON tokenJSON = new TokenJSON();
 		
 		if(usuario != null) {
 			
@@ -37,9 +34,15 @@ public class LoginController {
 			
 			String jwt = JWTUtils.crearToken(usuario.getUsuario(), roles);
 			
-			return  ResponseEntity.ok().body(jwt);
+			tokenJSON.setOk(true);
+			tokenJSON.setToken(jwt);
+			
+			return  ResponseEntity.ok().body(tokenJSON);
 		}
 		
-		return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login o password incorrectos");
+		tokenJSON.setOk(false);
+		tokenJSON.setToken("");
+		
+		return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(tokenJSON);
 	}
 }
