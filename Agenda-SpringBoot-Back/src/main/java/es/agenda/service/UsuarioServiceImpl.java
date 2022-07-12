@@ -1,6 +1,7 @@
 package es.agenda.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import es.agenda.dao.UsuarioDaoI;
 import es.agenda.excepcion.UsuarioYaExisteException;
+import es.agenda.json.UsuarioJSON;
 import es.agenda.model.Usuario;
 
 @Service("usuarioService")
@@ -71,5 +73,14 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 		textoABuscar = textoABuscar.replace(" ", "%");
 		
 		return dao.buscarUsuarios(textoABuscar);
+	}
+
+	@Override
+	public void findAllJSON() {
+		
+		List<Usuario> usuarios = findAll();
+		
+		usuarios.stream().map(u -> new UsuarioJSON(u.getId(), u.getUsuario())).collect(Collectors.toList());
+		
 	}
 }

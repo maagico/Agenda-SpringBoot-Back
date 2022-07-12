@@ -18,4 +18,6 @@ public interface UsuarioServiceI extends GenericServiceI<Usuario>{
 	Usuario findUsuarioByUsuarioYPassword(String usuario, String password);
 
 	String findRolesByUsuario(String usuario);
+
+	void findAllJSON();
 }

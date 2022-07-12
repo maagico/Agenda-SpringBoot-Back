@@ -110,6 +110,6 @@ public class UsuarioDaoImpl extends GenericDaoImpl<Usuario> implements UsuarioDa
 		
 		Rol rol = usuarioBD.getRol();
 		
-		return rol.getNombre();
+		return rol.getRol();
 	}
 }

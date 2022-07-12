@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class UsuarioJSON {
-
+	
 	@Getter
 	@Setter
 	private Long id;
@@ -21,4 +21,9 @@ public class UsuarioJSON {
 	@Setter
 	private Long RoleId;
 	
+	public UsuarioJSON(Long id, String usuario) {
+		
+		this.id = id;
+		this.usuario = usuario;
+	}
 }

@@ -26,7 +26,7 @@ public class CuentaController {
 	@Autowired
 	private RolServiceI rolService;
 	
-	@PostMapping("/crearCuenta")
+	@PostMapping("/cuentas")
 	public ResponseEntity<MensajeJSON> crearCuenta(String username, 
 			   									   String password,
 			   									   Long roleId) throws IllegalAccessException, InvocationTargetException {
