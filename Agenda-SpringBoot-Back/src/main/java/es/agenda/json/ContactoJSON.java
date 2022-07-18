@@ -2,8 +2,8 @@ package es.agenda.json;
 
 import java.util.List;
 
-import es.agenda.model.Correo;
-import es.agenda.model.Telefono;
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,11 +21,19 @@ public class ContactoJSON {
 	@Setter
 	private String apellidos;
 	
-	@Getter
 	@Setter
 	private List<TelefonoJSON> telefonosJSON;
 	
-	@Getter
 	@Setter
 	private List<CorreoJSON> correosJSON;
+	
+	@JsonGetter("telefonos")
+	public List<TelefonoJSON> getTelefonosJSON(){
+		return telefonosJSON;
+	}
+	
+	@JsonGetter("correos")
+	public List<CorreoJSON> getCorreosJSON(){
+		return correosJSON;
+	}
 }

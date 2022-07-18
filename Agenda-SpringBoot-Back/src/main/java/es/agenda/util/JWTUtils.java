@@ -30,6 +30,8 @@ public final class JWTUtils {
 	
 	private static final String BEARER = "Bearer ";
 	
+	private static final String ID = "ID";
+	
 	private static final String ROLES = "ROLES";
 	
 	private static String keyString = "ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=";
@@ -38,10 +40,11 @@ public final class JWTUtils {
 	
 	private static Key key = Keys.hmacShaKeyFor(keyBytes);
 	
-	public static String crearToken(String usuario, String roles) {
+	public static String crearToken(Long id, String usuario, String roles) {
 		
 		return Jwts.builder()
 				.setSubject(usuario)
+				.claim(ID, id)
 				.claim(ROLES, roles)
     	        .signWith(key, SignatureAlgorithm.HS512)
     	        //.setExpiration(validity)
@@ -60,9 +63,9 @@ public final class JWTUtils {
               .map(SimpleGrantedAuthority::new)
               .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        User user = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
 	
 	public static boolean validarToken(String token) {
@@ -92,4 +95,21 @@ public final class JWTUtils {
         
         return null;
      }
+
+	public static Long getIdToken(HttpServletRequest request) {
+		
+		String token = existeToken(request);
+		
+		if(token != null) {
+			
+			Claims claims = Jwts.parserBuilder()
+			           .setSigningKey(key).build()
+			           .parseClaimsJws(token)
+			           .getBody();
+			
+			return Long.valueOf((Integer)claims.get(ID));
+		}
+		
+		return null;
+	}
 }

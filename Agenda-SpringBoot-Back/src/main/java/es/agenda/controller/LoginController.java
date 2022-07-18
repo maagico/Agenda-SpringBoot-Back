@@ -32,7 +32,7 @@ public class LoginController {
 			
 			String roles = usuarioService.findRolesByUsuario(username);
 			
-			String jwt = JWTUtils.crearToken(usuario.getUsuario(), roles);
+			String jwt = JWTUtils.crearToken(usuario.getId(), usuario.getUsuario(), roles);
 			
 			tokenJSON.setOk(true);
 			tokenJSON.setToken(jwt);

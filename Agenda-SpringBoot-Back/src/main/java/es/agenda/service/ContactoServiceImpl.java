@@ -12,8 +12,6 @@ import es.agenda.json.ContactoJSON;
 import es.agenda.json.CorreoJSON;
 import es.agenda.json.TelefonoJSON;
 import es.agenda.model.Contacto;
-import es.agenda.model.Correo;
-import es.agenda.model.Telefono;
 
 @Service("contactoService")
 public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDaoI> implements ContactoServiceI{
@@ -38,11 +36,11 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 	}
 
 	@Override
-	public List<ContactoJSON> findAllOrderByNombreJSON(Long id) {
+	public List<ContactoJSON> findAllOrderByNombreJSON(Long idUsuarioLogueado) {
 		
 		List<ContactoJSON> contactosJSON = new ArrayList<>();
 		
-		List<Contacto> contactos = dao.findAllOrderByNombre(id);
+		List<Contacto> contactos = dao.findAllOrderByNombre(idUsuarioLogueado);
 	
 		for (Contacto contacto : contactos) {
 			
@@ -72,14 +70,29 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 	}
 	
 	@Override
-	public ContactoJSON findByIdJSON(Long id) {
+	public ContactoJSON findByIdJSON(Long idUsuarioLogueado, Long idContacto) {
 		
 		ContactoJSON contactoJSON = new ContactoJSON();
 		
-		Contacto contacto = dao.findById(id);
+		Contacto contacto = dao.findById(idUsuarioLogueado, idContacto);
 		
 		BeanUtils.copyProperties(contacto, contactoJSON);
 		
+		List<TelefonoJSON> telefonosJSON = 
+				contacto.getTelefonos()
+				.stream()
+				.map(t -> new TelefonoJSON(t.getId(), t.getNumero()))
+				.collect(Collectors.toList());
+		
+		contactoJSON.setTelefonosJSON(telefonosJSON);
+		
+		List<CorreoJSON> correosJSON = 
+				contacto.getCorreos().stream()
+				.map(c -> new CorreoJSON(c.getId(), c.getCorreo()))
+				.collect(Collectors.toList());
+		
+		contactoJSON.setCorreosJSON(correosJSON);
+				
 		return contactoJSON;
 	}
 }
