@@ -1,5 +1,7 @@
 package es.agenda.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -22,7 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		http
 		.sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         	.authorizeRequests()
         	.antMatchers("/api/web/**").hasRole("USUARIO")
@@ -40,13 +44,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         	.frameOptions()
         	.disable()
 		.and()
-		.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+		.cors().configurationSource(c -> {
+			
+			CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+			configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
+			
+		    return configuration;
+		})
 		.and().csrf().disable();
 	}
-	
-//	@Override
-//	@Bean
-//	public AuthenticationManager authenticationManagerBean() throws Exception {
-//	    return super.authenticationManagerBean();
-//	}
 }
