@@ -10,12 +10,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name = "correos")
+@AllArgsConstructor
 public class Correo {
+ 
+	public Correo() {	
+	}
 	
 	@Getter
 	@Setter

@@ -12,6 +12,9 @@ import es.agenda.json.ContactoJSON;
 import es.agenda.json.CorreoJSON;
 import es.agenda.json.TelefonoJSON;
 import es.agenda.model.Contacto;
+import es.agenda.model.Correo;
+import es.agenda.model.Telefono;
+import es.agenda.model.Usuario;
 
 @Service("contactoService")
 public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDaoI> implements ContactoServiceI{
@@ -93,6 +96,42 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 		
 		contactoJSON.setCorreosJSON(correosJSON);
 				
+		return contactoJSON;
+	}
+
+	@Override
+	public ContactoJSON modificarContactoJSON(Long idUsuarioLogueado, Long idContacto, ContactoJSON contactoJSON) {
+		
+		String nombre = contactoJSON.getNombre();
+		String apellidos = contactoJSON.getApellidos();
+		
+		Contacto contacto = new Contacto();
+		contacto.setId(idContacto);
+		
+		Usuario usuario = new Usuario();
+		usuario.setId(idUsuarioLogueado);
+		
+		contacto.setUsuario(usuario);
+		
+		contacto.setNombre(nombre);
+		contacto.setApellidos(apellidos);
+		
+		List<Telefono> telefonos = contactoJSON.getTelefonosJSON()
+				.stream()
+				.map(t -> new Telefono(t.getId(), t.getNumero(), contacto))
+				.collect(Collectors.toList());
+		
+		contacto.setTelefonos(telefonos);
+		
+		List<Correo> correos = contactoJSON.getCorreosJSON()
+				.stream()
+				.map(c -> new Correo(c.getId(), c.getCorreo(), contacto))
+				.collect(Collectors.toList());
+		
+		contacto.setCorreos(correos);
+		
+		dao.merge(contacto);
+		
 		return contactoJSON;
 	}
 }
