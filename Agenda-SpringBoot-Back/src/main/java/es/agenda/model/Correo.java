@@ -28,7 +28,6 @@ public class Correo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Getter
 	@Setter
 	@Column
 	private String correo;
@@ -38,4 +37,13 @@ public class Correo {
 	@ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="contacto_id")
 	private Contacto contacto;
+	
+	public String getCorreo() {
+		
+		if(correo == null || "null".equals(correo)) {
+			correo = "";
+		}
+		
+		return correo;
+	}
 }

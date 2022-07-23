@@ -28,7 +28,6 @@ public class Telefono {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Getter
 	@Setter
 	@Column
 	private String numero;
@@ -39,5 +38,12 @@ public class Telefono {
     @JoinColumn(name="contacto_id")
 	private Contacto contacto;
 	
-	
+	public String getNumero() {
+		
+		if(numero == null || "null".equals(numero)) {
+			numero = "";
+		}
+		
+		return numero;
+	}
 }
