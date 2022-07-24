@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.agenda.dao.ContactoDaoI;
+import es.agenda.dao.UsuarioDaoI;
 import es.agenda.json.ContactoJSON;
 import es.agenda.json.CorreoJSON;
 import es.agenda.json.TelefonoJSON;
@@ -18,6 +20,9 @@ import es.agenda.model.Usuario;
 
 @Service("contactoService")
 public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDaoI> implements ContactoServiceI{
+	
+	@Autowired
+	private UsuarioDaoI usuarioDao;
 	
 	public ContactoServiceImpl(ContactoDaoI dao) {
 		super(dao);
@@ -99,6 +104,44 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 		return contactoJSON;
 	}
 
+	@Override
+	public ContactoJSON crearContactoJSON(Long idUsuarioLogueado, ContactoJSON contactoJSON) {
+		
+		String nombre = contactoJSON.getNombre();
+		String apellidos = contactoJSON.getApellidos();
+		
+		Contacto contacto = new Contacto();
+		
+		Usuario usuario = usuarioDao.findById(idUsuarioLogueado);
+		
+		contacto.setUsuario(usuario);
+		
+		contacto.setNombre(nombre);
+		contacto.setApellidos(apellidos);
+		
+		List<Telefono> telefonos = contactoJSON.getTelefonosJSON()
+				.stream()
+				.map(t -> new Telefono(t.getId(), t.getNumero(), contacto))
+				.collect(Collectors.toList());
+		
+		contacto.setTelefonos(telefonos);
+		
+		List<Correo> correos = contactoJSON.getCorreosJSON()
+				.stream()
+				.map(c -> new Correo(c.getId(), c.getCorreo(), contacto))
+				.collect(Collectors.toList());
+		
+		contacto.setCorreos(correos);
+		
+		dao.persist(contacto);
+		
+		Long id = contacto.getId();
+		
+		contactoJSON.setId(id);
+		
+		return contactoJSON;
+	}
+	
 	@Override
 	public ContactoJSON modificarContactoJSON(Long idUsuarioLogueado, Long idContacto, ContactoJSON contactoJSON) {
 		

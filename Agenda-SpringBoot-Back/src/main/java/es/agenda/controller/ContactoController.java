@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -56,6 +57,42 @@ public class ContactoController {
 		return ResponseEntity.status(HttpStatus.OK).body(contactoJSON);
 	}
 	
+	@PostMapping("/contactos/")
+	public ResponseEntity<MensajeJSON> crearContacto(HttpServletRequest request,
+													 String nombre,
+													 String apellidos,
+													 String telefono,
+													 String segundoTelefono,
+													 String correo,
+													 String segundoCorreo){
+	
+		Long idUsuarioLogueado = JWTUtils.getIdToken(request);
+		
+		ContactoJSON contactoJSON = new ContactoJSON();
+		contactoJSON.setNombre(nombre);
+		contactoJSON.setApellidos(apellidos);
+		
+		TelefonoJSON telefonoJSON = new TelefonoJSON(null, telefono);
+		TelefonoJSON segundoTelefonoJSON = new TelefonoJSON(null, segundoTelefono);
+		
+		CorreoJSON correoJSON = new CorreoJSON(null, correo);
+		CorreoJSON segundoCorreoJSON = new CorreoJSON(null, segundoCorreo);
+		
+		contactoJSON.setTelefonosJSON(List.of(telefonoJSON, segundoTelefonoJSON));
+		contactoJSON.setCorreosJSON(List.of(correoJSON, segundoCorreoJSON));
+		
+		contactoJSON = contactoService.crearContactoJSON(idUsuarioLogueado, contactoJSON);
+		
+		Long id = contactoJSON.getId();
+		
+		MensajeJSON mensajeJSON = new MensajeJSON();
+		mensajeJSON.setId(id);
+		mensajeJSON.setOk(true);
+		mensajeJSON.setTexto("Contacto creado correctamente");
+		
+		return ResponseEntity.status(HttpStatus.OK).body(mensajeJSON);
+	}
+	
 	@PutMapping("/contactos/{id}")
 	public ResponseEntity<MensajeJSON> modificarContactoById(HttpServletRequest request,
 															  String nombre,
@@ -81,7 +118,7 @@ public class ContactoController {
 		contactoJSON.setTelefonosJSON(List.of(telefonoJSON, segundoTelefonoJSON));
 		contactoJSON.setCorreosJSON(List.of(correoJSON, segundoCorreoJSON));
 		
-		contactoService.modificarContactoJSON(idUsuarioLogueado, idContacto, contactoJSON);
+		contactoJSON = contactoService.modificarContactoJSON(idUsuarioLogueado, idContacto, contactoJSON);
 		
 		MensajeJSON mensajeJSON = new MensajeJSON();
 		mensajeJSON.setOk(true);

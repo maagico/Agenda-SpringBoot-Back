@@ -7,6 +7,10 @@ public class MensajeJSON {
 
 	@Getter
 	@Setter
+	private Long id;
+	
+	@Getter
+	@Setter
 	private Boolean ok;
 	
 	@Getter

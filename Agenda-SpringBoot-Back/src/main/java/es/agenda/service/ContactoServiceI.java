@@ -18,4 +18,6 @@ public interface ContactoServiceI extends GenericServiceI<Contacto>{
 	ContactoJSON modificarContactoJSON(Long idUsuarioLogueado, Long idContacto, ContactoJSON contactoJSON);
 
 	void deleteById(Long idUsuarioLogueado, Long idContacto);
+
+	ContactoJSON crearContactoJSON(Long idUsuarioLogueado, ContactoJSON contactoJSON);
 }
