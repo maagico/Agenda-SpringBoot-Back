@@ -11,4 +11,6 @@ public interface ContactoDaoI extends GenericDaoI<Contacto>{
 	List<Contacto> buscarContactos(Long idUsuarioLogueado, String textoABuscar);
 
 	Contacto findById(Long idUsuarioLogueado, Long idContacto);
+
+	Contacto findContactoById(Long idUsuarioLogueado, Long idContacto);
 }

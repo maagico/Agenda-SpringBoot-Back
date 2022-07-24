@@ -16,4 +16,6 @@ public interface ContactoServiceI extends GenericServiceI<Contacto>{
 	List<ContactoJSON> findAllOrderByNombreJSON(Long idToken);
 
 	ContactoJSON modificarContactoJSON(Long idUsuarioLogueado, Long idContacto, ContactoJSON contactoJSON);
+
+	void deleteById(Long idUsuarioLogueado, Long idContacto);
 }

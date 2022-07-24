@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -85,6 +86,21 @@ public class ContactoController {
 		MensajeJSON mensajeJSON = new MensajeJSON();
 		mensajeJSON.setOk(true);
 		mensajeJSON.setTexto("Contacto modificado correctamente");
+		
+		return ResponseEntity.status(HttpStatus.OK).body(mensajeJSON);
+	}
+	
+	@DeleteMapping("/contactos/{id}")
+	public ResponseEntity<MensajeJSON> deleteById(HttpServletRequest request, 
+												  @PathVariable(value="id") Long idContacto){
+		
+		Long idUsuarioLogueado = JWTUtils.getIdToken(request);
+		
+		contactoService.deleteById(idUsuarioLogueado, idContacto);
+		
+		MensajeJSON mensajeJSON = new MensajeJSON();
+		mensajeJSON.setOk(true);
+		mensajeJSON.setTexto("Contacto eliminado correctamente");
 		
 		return ResponseEntity.status(HttpStatus.OK).body(mensajeJSON);
 	}

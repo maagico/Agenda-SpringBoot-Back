@@ -134,4 +134,12 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 		
 		return contactoJSON;
 	}
+
+	@Override
+	public void deleteById(Long idUsuarioLogueado, Long idContacto) {
+		
+		Contacto contacto = dao.findContactoById(idUsuarioLogueado, idContacto);
+		
+		dao.remove(contacto);
+	}
 }

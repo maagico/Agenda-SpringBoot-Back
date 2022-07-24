@@ -52,4 +52,18 @@ public class ContactoDaoImpl extends GenericDaoImpl<Contacto> implements Contact
 		
 		return (Contacto)query.getSingleResult();
 	}
+
+	@Override
+	public Contacto findContactoById(Long idUsuarioLogueado, Long idContacto) {
+		
+		String jpql = "Select C from Contacto C where C.usuario.id = :idUsuarioLogueado and C.id = :idContacto";
+		
+		Query query = entityManager.createQuery(jpql);
+		query.setParameter("idUsuarioLogueado", idUsuarioLogueado);
+		query.setParameter("idContacto", idContacto);
+		
+		Contacto contacto = (Contacto)query.getSingleResult();
+		
+		return contacto;
+	}
 }
