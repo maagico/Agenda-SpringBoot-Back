@@ -29,47 +29,25 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 	}
 
 	@Override
-	public List<Contacto> findAllOrderByNombre(Long idUsuarioLogueado) {
+	public List<ContactoJSON> buscarContactosJSON(Long idUsuarioLogueado, String textoABuscar) {
 		
-		return dao.findAllOrderByNombre(idUsuarioLogueado);
-	}
-
-	@Override
-	public List<Contacto> buscarContactos(Long idUsuarioLogueado, String textoABuscar) {
 		
+		textoABuscar = textoABuscar.toLowerCase();
 		textoABuscar = " " + textoABuscar + " ";
 		textoABuscar = textoABuscar.replace(" ", "%");
 		
-		return dao.buscarContactos(idUsuarioLogueado, textoABuscar);
+		List<Contacto> contactos = dao.buscarContactos(idUsuarioLogueado, textoABuscar);
+		
+		return convertirAContactosJSON(contactos);
 	}
-
-	@Override
-	public List<ContactoJSON> findAllOrderByNombreJSON(Long idUsuarioLogueado) {
+	
+	private List<ContactoJSON> convertirAContactosJSON(List<Contacto> contactos) {
 		
 		List<ContactoJSON> contactosJSON = new ArrayList<>();
 		
-		List<Contacto> contactos = dao.findAllOrderByNombre(idUsuarioLogueado);
-	
 		for (Contacto contacto : contactos) {
 			
-			ContactoJSON contactoJSON = new ContactoJSON();
-			
-			BeanUtils.copyProperties(contacto, contactoJSON);
-			
-			List<TelefonoJSON> telefonosJSON = 
-					contacto.getTelefonos()
-					.stream()
-					.map(t -> new TelefonoJSON(t.getId(), t.getNumero()))
-					.collect(Collectors.toList());
-			
-			contactoJSON.setTelefonosJSON(telefonosJSON);
-			
-			List<CorreoJSON> correosJSON = 
-					contacto.getCorreos().stream()
-					.map(c -> new CorreoJSON(c.getId(), c.getCorreo()))
-					.collect(Collectors.toList());
-			
-			contactoJSON.setCorreosJSON(correosJSON);
+			ContactoJSON contactoJSON = convertirAContactoJSON(contacto);
 			
 			contactosJSON.add(contactoJSON);
 		}
@@ -77,12 +55,9 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 		return contactosJSON;
 	}
 	
-	@Override
-	public ContactoJSON findByIdJSON(Long idUsuarioLogueado, Long idContacto) {
+	private ContactoJSON convertirAContactoJSON(Contacto contacto) {
 		
 		ContactoJSON contactoJSON = new ContactoJSON();
-		
-		Contacto contacto = dao.findById(idUsuarioLogueado, idContacto);
 		
 		BeanUtils.copyProperties(contacto, contactoJSON);
 		
@@ -100,38 +75,32 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 				.collect(Collectors.toList());
 		
 		contactoJSON.setCorreosJSON(correosJSON);
-				
+		
+		return contactoJSON;
+	}
+	
+	@Override
+	public List<ContactoJSON> findAllOrderByNombreJSON(Long idUsuarioLogueado) {
+		
+		List<Contacto> contactos = dao.findAllOrderByNombre(idUsuarioLogueado);
+	
+		return convertirAContactosJSON(contactos);
+	}
+	
+	@Override
+	public ContactoJSON findByIdJSON(Long idUsuarioLogueado, Long idContacto) {
+		
+		Contacto contacto = dao.findById(idUsuarioLogueado, idContacto);
+		
+		ContactoJSON contactoJSON = convertirAContactoJSON(contacto);
+		
 		return contactoJSON;
 	}
 
 	@Override
 	public ContactoJSON crearContactoJSON(Long idUsuarioLogueado, ContactoJSON contactoJSON) {
 		
-		String nombre = contactoJSON.getNombre();
-		String apellidos = contactoJSON.getApellidos();
-		
-		Contacto contacto = new Contacto();
-		
-		Usuario usuario = usuarioDao.findById(idUsuarioLogueado);
-		
-		contacto.setUsuario(usuario);
-		
-		contacto.setNombre(nombre);
-		contacto.setApellidos(apellidos);
-		
-		List<Telefono> telefonos = contactoJSON.getTelefonosJSON()
-				.stream()
-				.map(t -> new Telefono(t.getId(), t.getNumero(), contacto))
-				.collect(Collectors.toList());
-		
-		contacto.setTelefonos(telefonos);
-		
-		List<Correo> correos = contactoJSON.getCorreosJSON()
-				.stream()
-				.map(c -> new Correo(c.getId(), c.getCorreo(), contacto))
-				.collect(Collectors.toList());
-		
-		contacto.setCorreos(correos);
+		Contacto contacto = convertirAContacto(idUsuarioLogueado, null, contactoJSON);
 		
 		dao.persist(contacto);
 		
@@ -144,16 +113,28 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 	
 	@Override
 	public ContactoJSON modificarContactoJSON(Long idUsuarioLogueado, Long idContacto, ContactoJSON contactoJSON) {
+	
+		Contacto contacto = convertirAContacto( idUsuarioLogueado, idContacto, contactoJSON);
 		
+		dao.merge(contacto);
+		
+		return contactoJSON;
+	}
+	
+	private Contacto convertirAContacto(Long idUsuarioLogueado, Long idContacto, ContactoJSON contactoJSON) {
+	
 		String nombre = contactoJSON.getNombre();
 		String apellidos = contactoJSON.getApellidos();
 		
 		Contacto contacto = new Contacto();
-		contacto.setId(idContacto);
 		
-		Usuario usuario = new Usuario();
-		usuario.setId(idUsuarioLogueado);
+		if(contacto != null) {
 		
+			contacto.setId(idContacto);
+		}
+		
+		Usuario usuario = usuarioDao.findById(idUsuarioLogueado);
+				
 		contacto.setUsuario(usuario);
 		
 		contacto.setNombre(nombre);
@@ -173,9 +154,8 @@ public class ContactoServiceImpl extends GenericServiceImpl<Contacto, ContactoDa
 		
 		contacto.setCorreos(correos);
 		
-		dao.merge(contacto);
+		return contacto;
 		
-		return contactoJSON;
 	}
 
 	@Override

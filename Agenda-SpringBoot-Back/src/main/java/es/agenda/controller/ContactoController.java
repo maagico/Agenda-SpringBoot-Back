@@ -30,16 +30,24 @@ public class ContactoController {
 	private ContactoServiceI contactoService;	
 
 	@GetMapping("/contactos")
-	public ResponseEntity<List<ContactoJSON>> listadoContactos(HttpServletRequest request) {
+	public ResponseEntity<List<ContactoJSON>> listadoContactos(HttpServletRequest request, String buscar) {
 		
 		Long idUsuarioLogueado = JWTUtils.getIdToken(request);
 		
 		if(idUsuarioLogueado != null) {
 		
-			List<ContactoJSON> contactosJSON = contactoService.findAllOrderByNombreJSON(idUsuarioLogueado);
+			if(buscar == null || buscar.equals("")) {
 			
-			return  ResponseEntity.status(HttpStatus.OK).body(contactosJSON);
+				List<ContactoJSON> contactosJSON = contactoService.findAllOrderByNombreJSON(idUsuarioLogueado);
 			
+				return  ResponseEntity.status(HttpStatus.OK).body(contactosJSON);
+			
+			}else {
+				
+				List<ContactoJSON> contactosJSON = contactoService.buscarContactosJSON(idUsuarioLogueado, buscar);
+				
+				return  ResponseEntity.status(HttpStatus.OK).body(contactosJSON);
+			}
 		}else {
 			
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

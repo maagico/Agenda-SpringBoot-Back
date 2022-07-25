@@ -7,9 +7,7 @@ import es.agenda.model.Contacto;
 
 public interface ContactoServiceI extends GenericServiceI<Contacto>{
 
-	List<Contacto> findAllOrderByNombre(Long idToken);
-
-	List<Contacto> buscarContactos(Long idToken, String textoABuscar);
+	List<ContactoJSON> buscarContactosJSON(Long idToken, String textoABuscar);
 
 	ContactoJSON findByIdJSON(Long idToken, Long id);
 	
