@@ -5,7 +5,8 @@ INSERT INTO `roles` (`id`, `rol`, `nombre`) VALUES
 INSERT INTO `usuarios` (`id`, `usuario`, `password`, `role_id`) VALUES
 (2, 'admin', '$2a$10$C6IMLHb5Rt1VWBBTXhyxw.EmTBXcg//9yTxU1LhtvwvmBx4IT43x2', 4),
 (5, 'usuario', '$2a$10$6rC.Hty68SvsTw33Ah2TGOarAfsTX2GyQxSMw4dpNAE1J6WYN7fDW', 3),
-(6, 'usuario1', '$2a$10$Yqsp9f4bDWqneGJU8vu2NeCs0GwH0xxhdqZTDbbtEfKy9xMyas4/W', 3);
+(6, 'usuario1', '$2a$10$Yqsp9f4bDWqneGJU8vu2NeCs0GwH0xxhdqZTDbbtEfKy9xMyas4/W', 3),
+(7, 'miguel', '$2a$10$6rC.Hty68SvsTw33Ah2TGOarAfsTX2GyQxSMw4dpNAE1J6WYN7fDW', 3);
 
 INSERT INTO `contactos` (`id`, `nombre`, `apellidos`, `usuario_id`) VALUES
 (6, 'Peter', 'Parker', 5),

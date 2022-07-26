@@ -12,9 +12,9 @@ public interface UsuarioServiceI extends GenericServiceI<Usuario>{
 
 	Usuario findByNombreUsuario(String nombreUsuarioLogueado);
 
-	List<UsuarioJSON> findAllUsuariosOrderByNombre();
+	List<UsuarioJSON> findAllOrderByNombreJSON();
 
-	List<UsuarioJSON> buscarUsuarios(String textoABuscar);
+	List<UsuarioJSON> buscarUsuariosJSON(String textoABuscar);
 
 	Usuario findUsuarioByUsuarioYPassword(String usuario, String password);
 

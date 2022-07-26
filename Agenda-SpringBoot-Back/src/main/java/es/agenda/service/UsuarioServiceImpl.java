@@ -49,10 +49,9 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 	}
  
 	@Override
-	public List<UsuarioJSON> findAllUsuariosOrderByNombre() {
+	public List<UsuarioJSON> findAllOrderByNombreJSON() {
 		
 		List<Usuario> usuarios = dao.findAllUsuariosOrderByNombre();
-		
 		
 		List<UsuarioJSON> usuariosJSON = 
 				usuarios.stream()
@@ -75,7 +74,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 	}
 	
 	@Override
-	public List<UsuarioJSON> buscarUsuarios(String textoABuscar) {
+	public List<UsuarioJSON> buscarUsuariosJSON(String textoABuscar) {
 		
 		textoABuscar = textoABuscar.toLowerCase();
 		textoABuscar = " " + textoABuscar + " ";
