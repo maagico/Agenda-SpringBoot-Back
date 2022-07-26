@@ -3,6 +3,7 @@ package es.agenda.service;
 import java.util.List;
 
 import es.agenda.excepcion.UsuarioYaExisteException;
+import es.agenda.json.UsuarioJSON;
 import es.agenda.model.Usuario;
 
 public interface UsuarioServiceI extends GenericServiceI<Usuario>{
@@ -11,13 +12,13 @@ public interface UsuarioServiceI extends GenericServiceI<Usuario>{
 
 	Usuario findByNombreUsuario(String nombreUsuarioLogueado);
 
-	List<Usuario> findAllUsuariosOrderByNombre();
+	List<UsuarioJSON> findAllUsuariosOrderByNombre();
 
-	List<Usuario> buscarUsuarios(String textoABuscar);
+	List<UsuarioJSON> buscarUsuarios(String textoABuscar);
 
 	Usuario findUsuarioByUsuarioYPassword(String usuario, String password);
 
 	String findRolesByUsuario(String usuario);
 
-	void findAllJSON();
+	List<UsuarioJSON> findAllJSON();
 }

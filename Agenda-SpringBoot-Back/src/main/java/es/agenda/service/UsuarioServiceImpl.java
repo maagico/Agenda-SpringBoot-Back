@@ -49,9 +49,17 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 	}
  
 	@Override
-	public List<Usuario> findAllUsuariosOrderByNombre() {
+	public List<UsuarioJSON> findAllUsuariosOrderByNombre() {
 		
-		return dao.findAllUsuariosOrderByNombre();
+		List<Usuario> usuarios = dao.findAllUsuariosOrderByNombre();
+		
+		
+		List<UsuarioJSON> usuariosJSON = 
+				usuarios.stream()
+				.map(u -> new UsuarioJSON(u.getId(), u.getUsuario()))
+				.collect(Collectors.toList());
+		
+		return usuariosJSON;
 	}
 
 	@Override
@@ -67,20 +75,33 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, UsuarioDaoI>
 	}
 	
 	@Override
-	public List<Usuario> buscarUsuarios(String textoABuscar) {
+	public List<UsuarioJSON> buscarUsuarios(String textoABuscar) {
 		
+		textoABuscar = textoABuscar.toLowerCase();
 		textoABuscar = " " + textoABuscar + " ";
 		textoABuscar = textoABuscar.replace(" ", "%");
 		
-		return dao.buscarUsuarios(textoABuscar);
+		List<Usuario> usuarios = dao.buscarUsuarios(textoABuscar);
+		
+		List<UsuarioJSON> usuariosJSON = 
+				usuarios.stream()
+				.map(u -> new UsuarioJSON(u.getId(), u.getUsuario()))
+				.collect(Collectors.toList());
+		
+		return usuariosJSON;
 	}
 
 	@Override
-	public void findAllJSON() {
+	public List<UsuarioJSON> findAllJSON() {
 		
 		List<Usuario> usuarios = findAll();
 		
-		usuarios.stream().map(u -> new UsuarioJSON(u.getId(), u.getUsuario())).collect(Collectors.toList());
+		List<UsuarioJSON> usuariosJSON = 
+				usuarios.stream()
+				.map(u -> new UsuarioJSON(u.getId(), u.getUsuario()))
+				.collect(Collectors.toList());
+		
+		return usuariosJSON;
 		
 	}
 }
