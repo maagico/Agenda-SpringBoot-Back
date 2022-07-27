@@ -21,4 +21,6 @@ public interface UsuarioServiceI extends GenericServiceI<Usuario>{
 	String findRolesByUsuario(String usuario);
 
 	List<UsuarioJSON> findAllJSON();
+
+	void deleteById(Long idUsuario);
 }
