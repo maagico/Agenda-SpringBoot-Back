@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import es.agenda.dao.UsuarioDaoI;
 import es.agenda.excepcion.UsuarioYaExisteException;
 import es.agenda.json.UsuarioJSON;
-import es.agenda.model.Contacto;
 import es.agenda.model.Usuario;
 
 @Service("usuarioService")

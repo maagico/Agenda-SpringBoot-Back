@@ -54,6 +54,15 @@ public class ContactoController {
 		}
 	}
 	
+	@GetMapping("/usuarios/contactos/{id}")
+	public ResponseEntity<List<ContactoJSON>> listadoUsuarioContactos(HttpServletRequest request,
+																     @PathVariable(value="id") Long idUsuario) {
+		
+		List<ContactoJSON> contactosJSON = contactoService.findAllOrderByNombreJSON(idUsuario);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(contactosJSON);
+	}
+	
 	@GetMapping("/contactos/{id}")
 	public ResponseEntity<ContactoJSON> contactoById(HttpServletRequest request, 
 													 @PathVariable(value="id") Long idContacto){
